@@ -51,3 +51,45 @@ ______________________________________________________________________
 - **No Swallowing Exceptions**: Never mask errors or substitute dummy fallback states.
 - **Process Isolation**: Never use `ThreadPoolExecutor` for dynamic code execution; always use `multiprocessing.Process` with `process.terminate()` on timeouts to avoid GIL deadlocks.
 - **OOP Adherence**: Maintain abstract base classes (`ABC`) and dependency injection across all engine components.
+
+______________________________________________________________________
+
+## 📝 Git Workflow Rules
+
+### Atomic Commit Strategy
+
+**NEVER** use the `git-workflow` skill's `commit.py` script for initial project commits or when files need logical grouping. The script stages ALL changes at once.
+
+**ALWAYS** use manual staging for atomic commits:
+
+```bash
+git add <specific-files>
+git commit -m "type(scope): descriptive message"
+```
+
+### Commit Grouping Order
+
+1. **chore(root)**: Project config (`pyproject.toml`, `uv.lock`, `.gitignore`, `.python-version`, `.env.example`, `src/heal_my_goap/py.typed`)
+2. **docs(root)**: Documentation (`README.md`, `AGENTS.md`)
+3. **feat(models)**: Core domain models first (dependency foundation)
+4. **feat(<module>)**: Each module independently (`gap_analyzer`, `synthesizer`, `storage`, `sandbox`, `engine`)
+5. **feat(agent)**: Package exports (`__init__.py`)
+6. **test**: Test suite (all test files together)
+7. **feat(examples)**: Example files
+8. **feat(data)**: Data files (`demo_actions.json`)
+
+### Conventional Commit Format
+
+```
+<type>(<scope>): <message>
+```
+
+Types: `feat`, `fix`, `perf`, `refactor`, `docs`, `test`, `build`, `ci`, `chore`, `revert`
+
+Scopes: `root`, `models`, `gap_analyzer`, `synthesizer`, `storage`, `sandbox`, `engine`, `agent`, `examples`, `data`
+
+### Verification
+
+```bash
+git log --oneline  # Should show 11+ atomic commits, not 1 monolithic commit
+```
