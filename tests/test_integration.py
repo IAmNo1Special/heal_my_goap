@@ -35,7 +35,7 @@ def test_live_openrouter_synthesizer() -> None:
 
     assert action is not None
     assert action.effects.get("has_key") is True
-    assert action.cost >= 10.0
+    assert float(action.cost) >= 10.0  # type: ignore[arg-type]
     assert isinstance(action.name, str)
 
 

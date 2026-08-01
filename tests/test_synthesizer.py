@@ -17,7 +17,7 @@ def test_synthesizer_fallback_wildcard_action_when_no_api_key() -> None:
     action = synthesizer.synthesize_bridge_action(gap, available_actions=[])
     assert action is not None
     assert action.effects.get("file_downloaded") is True
-    assert action.cost >= 10
+    assert float(action.cost) >= 10  # type: ignore[arg-type]
     assert "wildcard" in action.name or "synth" in action.name
 
 
@@ -52,7 +52,7 @@ def test_synthesizer_mock_openrouter_response() -> None:
         action = synthesizer.synthesize_bridge_action(gap, available_actions=[])
         assert action is not None
         assert action.effects == {"has_key": True}
-        assert action.cost >= 10
+        assert float(action.cost) >= 10  # type: ignore[arg-type]
         assert action.name.startswith("synth_find_key")
 
 

@@ -92,14 +92,14 @@ wheels = [
 
 [[package]]
 name = "goapauto"
-version = "0.2.1"
+version = "0.2.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bb/dd/81add171da2cea3c81a480f677deda5a6b156d52715b6e3cb4eb4ed2729a/goapauto-0.2.1.tar.gz", hash = "sha256:bd91c7c0dc63c6c292ae1dd39f981eea21b7ae187f74bbc4840eaa1a8fe80ba5", size = 14563, upload-time = "2026-01-26T02:12:09.759Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/fb/b1/3b7090df949fedc02b47a266309206deae13972678ec7bd7e833c2e1dd34/goapauto-0.2.2.tar.gz", hash = "sha256:b24e994ef4c52942f23d4281a4197d5300fbaebd850c77e903c32d5b7c0f8a72", size = 19180, upload-time = "2026-08-01T10:55:05.077Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e1/07/4f6ec901ae3b9b2defe475abc45466b161033cfe11e9022da6c3c8aab074/goapauto-0.2.1-py3-none-any.whl", hash = "sha256:278e0e7f41c099eabb28ae8c545f6320dded901bee474f6b4275f6af58f1b2f0", size = 20261, upload-time = "2026-01-26T02:12:08.266Z" },
+    { url = "https://files.pythonhosted.org/packages/6a/f5/45f5817757ffe57832acbeffe300c9a6b46a6dc5649150ad62fbfd2d1943/goapauto-0.2.2-py3-none-any.whl", hash = "sha256:527d56e21bb5a3656debefbcc47d7b00d4e8a6c3c5542ed37c00615020a2556b", size = 24570, upload-time = "2026-08-01T10:55:04.073Z" },
 ]
 
 [[package]]
@@ -131,9 +131,18 @@ dev = [
     { name = "ruff" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "mypy" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+    { name = "ruff" },
+]
+
 [package.metadata]
 requires-dist = [
-    { name = "goapauto", specifier = ">=0.2.1" },
+    { name = "goapauto", specifier = ">=0.2.2" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.15.0" },
     { name = "pydantic", specifier = ">=2.13.4" },
@@ -144,6 +153,15 @@ requires-dist = [
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9.0" },
 ]
 provides-extras = ["dev"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = ">=2.3.0" },
+    { name = "pytest", specifier = ">=9.1.1" },
+    { name = "pytest-asyncio", specifier = ">=1.4.0" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "ruff", specifier = ">=0.16.1" },
+]
 
 [[package]]
 name = "httpcore"
