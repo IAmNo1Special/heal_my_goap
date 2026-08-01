@@ -36,6 +36,8 @@ jobs:
         run: uv run python -m mypy src tests
 
       - name: Run Tests with Coverage
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
         run: uv run pytest tests/ -v -s --cov=heal_my_goap --cov-report=term-missing --cov-fail-under=90 -W error
 
       - name: Upload coverage
