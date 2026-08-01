@@ -10,12 +10,18 @@ The robot medic must navigate a hospital, treat patients with limited
 medicine, handle equipment failures, and respond to emergencies - all
 while the system automatically synthesizes new actions when the existing
 action set is insufficient.
+
+Demonstrates goapauto 0.2.3+ features:
+- Positional args for Set/Increment/Decrement effects
+- WorldState.update_state properly applies effects
 """
 
 import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
+
+from goapauto.models.actions import Increment, Set
 
 from heal_my_goap import Action, Goal, GoapEngine, WorldState
 
@@ -31,11 +37,12 @@ def main() -> None:
     print("HOSPITAL EMERGENCY RESPONSE - HEALMYGOAP SCENARIO")
     print("=" * 70)
 
+    # Use positional args for effects (goapauto 0.2.3+)
     baseline_actions: list[Action] = [
         Action(
             name="navigate_to_location",
             preconditions={"patient_present": True},
-            effects={"location": "treatment_room"},
+            effects={"location": Set("treatment_room")},
             cost=3.0,
         ),
         Action(
@@ -50,17 +57,31 @@ def main() -> None:
         Action(
             name="restock_medicine",
             preconditions={"location": "central_hub"},
-            effects={"medicine_current": 100},
+            effects={"medicine_current": Set(100)},
             cost=5.0,
+        ),
+        Action(
+            name="administer_medicine",
+            preconditions={
+                "location": "treatment_room",
+                "medicine_current": lambda v: v > 0,
+            },
+            effects={
+                "medicine_current": Increment(-10),
+                "patient_health": Increment(20),
+            },
+            cost=2.0,
         ),
         Action(
             name="unlock_door",
             preconditions={"has_keycard": True},
-            effects={"door_locked": False},
+            effects={"door_locked": Set(False)},
             cost=1.0,
         ),
     ]
 
+    # Use specific numeric targets (callable targets not
+    # JSON serializable for LLM)
     goals_and_states: list[tuple[str, WorldState, Goal]] = [
         (
             "Treat Patient (has medicine)",
@@ -70,13 +91,14 @@ def main() -> None:
                 power_stable=True,
                 equipment_operational=True,
                 patient_present=False,
+                patient_health=0,
                 door_locked=False,
             ),
             Goal(
                 target_state={
                     "location": "treatment_room",
-                    "medicine_current": 50,
-                    "patient_present": True,
+                    "medicine_current": 30,
+                    "patient_health": 20,
                 },
                 priority=1,
                 name="Treat Patient",
@@ -90,6 +112,7 @@ def main() -> None:
                 power_stable=True,
                 equipment_operational=True,
                 patient_present=False,
+                patient_health=0,
                 door_locked=True,
             ),
             Goal(
@@ -106,6 +129,7 @@ def main() -> None:
                 power_stable=False,
                 equipment_operational=False,
                 patient_present=False,
+                patient_health=0,
                 door_locked=False,
             ),
             Goal(

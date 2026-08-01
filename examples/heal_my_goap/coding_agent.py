@@ -10,12 +10,18 @@ development context:
 The coding agent must navigate a complex workflow: fix syntax errors,
 write implementation, run code review, build, test, optimize, and
 document - synthesizing new actions when the standard workflow breaks.
+
+Demonstrates goapauto 0.2.3+ features:
+- Positional args for Set/Increment/Decrement effects
+- WorldState.update_state properly applies effects
 """
 
 import sys
 from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent.parent))
+
+from goapauto.models.actions import Increment, Set
 
 from heal_my_goap import Action, Goal, GoapEngine, WorldState
 
@@ -37,7 +43,7 @@ def main() -> None:
             name="fix_syntax_errors",
             preconditions={"has_syntax_errors": True},
             effects={
-                "has_syntax_errors": False,
+                "has_syntax_errors": Set(False),
                 "code_written": True,
             },
             cost=8.0,
@@ -48,7 +54,7 @@ def main() -> None:
                 "requirements_read": True,
                 "code_written": False,
             },
-            effects={"code_written": True},
+            effects={"code_written": Set(True)},
             cost=10.0,
         ),
         Action(
@@ -58,8 +64,8 @@ def main() -> None:
                 "code_reviewed": False,
             },
             effects={
-                "code_reviewed": True,
-                "lint_clean": True,
+                "code_reviewed": Set(True),
+                "lint_clean": Set(True),
             },
             cost=3.0,
         ),
@@ -70,13 +76,16 @@ def main() -> None:
                 "code_reviewed": True,
                 "build_success": False,
             },
-            effects={"build_success": True},
+            effects={"build_success": Set(True)},
             cost=5.0,
         ),
         Action(
             name="run_tests",
             preconditions={"build_success": True},
-            effects={"tests_passing": True},
+            effects={
+                "tests_passing": Set(True),
+                "coverage_pct": Increment(30),
+            },
             cost=4.0,
         ),
         Action(
@@ -85,8 +94,30 @@ def main() -> None:
                 "build_success": True,
                 "tests_passing": False,
             },
-            effects={"tests_passing": True},
+            effects={"tests_passing": Set(True)},
             cost=15.0,
+        ),
+        Action(
+            name="add_more_tests",
+            preconditions={
+                "tests_passing": True,
+                "coverage_pct": lambda v: v < 80,
+            },
+            effects={
+                "coverage_pct": Increment(20),
+            },
+            cost=7.0,
+        ),
+        Action(
+            name="optimize_performance",
+            preconditions={
+                "tests_passing": True,
+                "complexity_score": lambda v: v > 5,
+            },
+            effects={
+                "complexity_score": Increment(-3),
+            },
+            cost=12.0,
         ),
         Action(
             name="write_documentation",
@@ -94,7 +125,7 @@ def main() -> None:
                 "tests_passing": True,
                 "documentation_written": False,
             },
-            effects={"documentation_written": True},
+            effects={"documentation_written": Set(True)},
             cost=6.0,
         ),
     ]
@@ -108,6 +139,8 @@ def main() -> None:
                 code_reviewed=False,
                 build_success=False,
                 tests_passing=False,
+                coverage_pct=0,
+                complexity_score=10,
                 lint_clean=False,
                 documentation_written=False,
                 has_syntax_errors=False,
@@ -117,6 +150,8 @@ def main() -> None:
                     "code_written": True,
                     "build_success": True,
                     "tests_passing": True,
+                    "coverage_pct": 80,
+                    "complexity_score": 5,
                     "documentation_written": True,
                 },
                 priority=1,
@@ -131,6 +166,8 @@ def main() -> None:
                 code_reviewed=True,
                 build_success=False,
                 tests_passing=False,
+                coverage_pct=0,
+                complexity_score=10,
                 lint_clean=True,
                 documentation_written=False,
                 has_syntax_errors=False,
@@ -152,6 +189,8 @@ def main() -> None:
                 code_reviewed=False,
                 build_success=True,
                 tests_passing=False,
+                coverage_pct=0,
+                complexity_score=10,
                 lint_clean=False,
                 documentation_written=False,
                 has_syntax_errors=False,
@@ -170,6 +209,8 @@ def main() -> None:
                 code_reviewed=False,
                 build_success=False,
                 tests_passing=False,
+                coverage_pct=0,
+                complexity_score=10,
                 lint_clean=False,
                 documentation_written=False,
                 has_syntax_errors=True,
@@ -177,6 +218,7 @@ def main() -> None:
             Goal(
                 target_state={
                     "tests_passing": True,
+                    "coverage_pct": 80,
                     "lint_clean": True,
                     "documentation_written": True,
                 },
