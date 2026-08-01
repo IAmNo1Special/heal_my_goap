@@ -27,7 +27,7 @@ jobs:
         run: uvx ruff check . --fix && uvx ruff format . --check
 
       - name: Run MyPy
-        run: uv run --dev mypy src tests
+        run: uvx mypy src tests
 
       - name: Run Tests with Coverage
         run: uv run --dev pytest tests/ -v -s --cov=heal_my_goap --cov-report=term-missing --cov-fail-under=100 -W error
