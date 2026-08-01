@@ -27,7 +27,7 @@ jobs:
         run: uv pip install -e ".[dev]"
 
       - name: Verify mypy installed
-        run: uv run python -c "import mypy; print(mypy.__version__)"
+        run: uv run python -c "import mypy; print('mypy ok')"
 
       - name: Run Ruff (lint & format)
         run: uvx ruff check . --fix && uvx ruff format . --check
