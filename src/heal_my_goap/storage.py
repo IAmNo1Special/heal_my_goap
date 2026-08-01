@@ -139,6 +139,8 @@ class ActionStorage(BaseActionStorage):
             "cost": action.cost,
             "code_payload": code_payload,
         }
+        # Evict old hashes for same action name to prevent storage bloat
+        data = {k: v for k, v in data.items() if v.get("name") != action.name}
         data[action_hash] = action_dict
         self._write_data(data)
         return action_hash

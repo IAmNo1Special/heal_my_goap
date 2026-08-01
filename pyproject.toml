@@ -23,9 +23,10 @@ classifiers = [
     "Typing :: Typed",
 ]
 dependencies = [
-    "goapauto==0.2.7",
+    "goapauto>=0.3.0",
     "httpx>=0.28.1",
     "pydantic>=2.13.4",
+    "psutil>=6.0.0",
     "python-dotenv>=1.2.2",
 ]
 
@@ -115,8 +116,11 @@ tag_pattern = "v[0-9].*"
 dev = [
     "mdformat>=1.0.0",
     "mdformat-front-matters>=2.0.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.7",
     "mypy>=2.3.0",
     "pre-commit>=4.6.1",
+    "pymdown-extensions>=11.0.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",

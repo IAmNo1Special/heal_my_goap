@@ -85,6 +85,7 @@ class LLMSynthesizer(BaseSynthesizer):
             preconditions={},
             effects=gap.missing_predicate.copy(),
             cost=50,
+            description=f"Fallback wildcard action satisfying {pred_repr}.",
         )
 
     def synthesize_bridge_action(
@@ -183,6 +184,7 @@ class LLMSynthesizer(BaseSynthesizer):
                         preconditions=schema_inst.preconditions,
                         effects=schema_inst.effects,
                         cost=int(schema_inst.cost),
+                        description=schema_inst.description,
                     )
             except (
                 ValidationError,

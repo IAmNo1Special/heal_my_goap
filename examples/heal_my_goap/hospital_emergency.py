@@ -11,7 +11,7 @@ medicine, handle equipment failures, and respond to emergencies - all
 while the system automatically synthesizes new actions when the existing
 action set is insufficient.
 
-Demonstrates goapauto 0.2.3+ features:
+Demonstrates goapauto 0.3.0+ features:
 - Positional args for Set/Increment/Decrement effects
 - WorldState.update_state properly applies effects
 """
