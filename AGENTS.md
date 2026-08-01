@@ -56,6 +56,10 @@ via OpenRouter.
   Ruff rules `select = ["E", "F", "I", "UP", "D"]`).
 - **Zero-Dependency CLI Execution**: Use `uvx` for standalone CLI utilities
   (e.g., `uvx ruff check . --fix`, `uvx ruff format .`).
+- **Markdown Formatting**: Use `mdformat` with the `mdformat-front-matters`
+  plugin (e.g., `uvx --with mdformat-front-matters mdformat .`).
+- **Pre-commit Hooks**: Managed via `.pre-commit-config.yaml`
+  (`pre-commit install` to activate; `pre-commit run --all-files` to run).
 - **Command Format**: Always use `uv run <command>` (e.g.,
   `uv run --dev pytest`), omitting `python` unless explicitly required.
 
@@ -66,6 +70,8 @@ Before declaring work complete, agents MUST run and pass 100%:
 1. **Static Type Checking**: `uv run --dev mypy src tests` (0 errors, strict).
 1. **Linting & Formatting**: `uvx ruff check . --fix` &
    `uvx ruff format .` (0 violations; Google docstrings, 80-char limit).
+1. **Markdown Formatting**: `uvx --with mdformat-front-matters mdformat --check .`
+   (0 violations; CommonMark with YAML front matter preserved).
 1. **Pytest & Coverage**:
    `uv run --dev pytest -v -s --cov=heal_my_goap --cov-report=term-missing --cov-fail-under=100 -W error`
    (100% pass, 100% coverage, 0 warnings).
