@@ -37,7 +37,7 @@ Before declaring any work complete, agents MUST run and pass 100%:
 
 1. **Static Type Checking**: `uv run --dev mypy src tests` (Must yield 0 errors, strict mode).
 1. **Linting & Formatting**: `uvx ruff check . --fix` & `uvx ruff format .` (Must yield 0 violations with Google docstrings and 80-char line limit).
-1. **Pytest & Coverage**: `uv run --dev pytest -v -s --cov=heal_my_goap --cov-report=term-missing --cov-fail-under=90 -W error` (Must yield 100% pass, 90% coverage, 0 warnings; integration tests skipped without OPENROUTER_API_KEY).
+1. **Pytest & Coverage**: `uv run --dev pytest -v -s --cov=heal_my_goap --cov-report=term-missing --cov-fail-under=100 -W error` (Must yield 100% pass, 100% coverage, 0 warnings; integration tests skipped without OPENROUTER_API_KEY).
 
 ______________________________________________________________________
 
