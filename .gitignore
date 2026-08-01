@@ -38,6 +38,10 @@ coverage.xml
 .nox/
 .tox/
 
+# Example artifacts
+.goap_*.json
+*.mmd
+
 # Type checking & linting
 .mypy_cache/
 .ruff_cache/
