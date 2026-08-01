@@ -1,12 +1,13 @@
 """Tests for GoapEngine orchestration harness."""
 
 from typing import Any
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from heal_my_goap.engine import GoapEngine
 from heal_my_goap.models import Action, Goal, WorldState
+from heal_my_goap.storage import ActionStorage
 from heal_my_goap.synthesizer import LLMSynthesizer
 
 
@@ -106,3 +107,103 @@ def test_engine_non_idempotent_action_failure(
     res = engine.run(initial_state, goal)
     assert res.success is False
     assert "Non-idempotent action" in (res.error_message or "")
+
+
+def test_engine_loads_actions_from_storage(tmp_path: Any) -> None:
+    """Verifies engine loads persisted actions from storage at init."""
+    storage_file = str(tmp_path / "preloaded.json")
+    storage = ActionStorage(file_path=storage_file)
+    preloaded = Action(
+        name="preloaded_action",
+        preconditions={"needed": True},
+        effects={"done": True},
+        cost=1,
+    )
+    storage.save_action(preloaded)
+
+    engine = GoapEngine(initial_actions=[], storage=storage)
+    assert "preloaded_action" in engine.actions_dict
+
+
+def test_engine_accepts_plain_list_plan(tmp_path: Any) -> None:
+    """Verifies engine handles planner returning a plain list plan."""
+    action = Action(
+        name="open_door",
+        preconditions={},
+        effects={"door_open": True},
+        cost=1,
+    )
+    engine = GoapEngine(
+        initial_actions=[action], storage_path=str(tmp_path / "list.json")
+    )
+
+    ws_kwargs: dict[str, Any] = {"door_open": False}
+    initial_state = WorldState(**ws_kwargs)
+    goal = Goal(target_state={"door_open": True})
+
+    with patch("heal_my_goap.engine.Planner") as mock_planner:
+        mock_planner.return_value.generate_plan.return_value = ["open_door"]
+        res = engine.run(initial_state, goal)
+
+    assert res.success is True
+    assert res.final_state.get("door_open") is True
+
+
+def test_engine_skips_unknown_plan_action(tmp_path: Any) -> None:
+    """Verifies engine ignores plan actions missing from action registry."""
+    action = Action(
+        name="open_door",
+        preconditions={},
+        effects={"door_open": True},
+        cost=1,
+    )
+    engine = GoapEngine(
+        initial_actions=[action], storage_path=str(tmp_path / "unknown.json")
+    )
+
+    ws_kwargs: dict[str, Any] = {"door_open": False}
+    initial_state = WorldState(**ws_kwargs)
+    goal = Goal(target_state={"door_open": True})
+
+    with patch("heal_my_goap.engine.Planner") as mock_planner:
+        mock_planner.return_value.generate_plan.return_value = [
+            "ghost_action",
+            "open_door",
+        ]
+        res = engine.run(initial_state, goal)
+
+    assert res.success is True
+    assert res.final_state.get("door_open") is True
+
+
+def test_engine_execution_success_but_goal_not_satisfied(tmp_path: Any) -> None:
+    """Verifies engine handles successful execution that misses the goal."""
+    action = Action(
+        name="set_value",
+        preconditions={},
+        effects={"value": 1},
+        cost=1,
+    )
+    mock_synthesizer = MagicMock(spec=LLMSynthesizer)
+    mock_synthesizer.synthesize_bridge_action.return_value = Action(
+        name="synth_set_other",
+        preconditions={},
+        effects={"other": True},
+        cost=10,
+    )
+    engine = GoapEngine(
+        initial_actions=[action],
+        storage_path=str(tmp_path / "missgoal.json"),
+        synthesizer=mock_synthesizer,
+        max_heal_attempts=0,
+    )
+
+    ws_kwargs: dict[str, Any] = {"value": 0}
+    initial_state = WorldState(**ws_kwargs)
+    goal = Goal(target_state={"value": 1, "other": True})
+
+    with patch("heal_my_goap.engine.Planner") as mock_planner:
+        mock_planner.return_value.generate_plan.return_value = ["set_value"]
+        res = engine.run(initial_state, goal)
+
+    assert res.success is False

@@ -2,6 +2,8 @@
 
 from unittest.mock import MagicMock, patch
 
+import httpx
+
 from heal_my_goap.models import Action, Gap
 from heal_my_goap.synthesizer import LLMSynthesizer
 
@@ -14,11 +16,29 @@ def test_synthesizer_fallback_wildcard_action_when_no_api_key() -> None:
         dependent_action_name="process_file",
     )
 
-    action = synthesizer.synthesize_bridge_action(gap, available_actions=[])
+    with patch("heal_my_goap.synthesizer.os.getenv", return_value=""):
+        synthesizer = LLMSynthesizer(api_key="")
+        action = synthesizer.synthesize_bridge_action(gap, available_actions=[])
     assert action is not None
     assert action.effects.get("file_downloaded") is True
     assert float(action.cost) >= 10  # type: ignore[arg-type]
     assert "wildcard" in action.name or "synth" in action.name
+
+
+def test_synthesizer_retry_exception_falls_back_to_wildcard() -> None:
+    """Verifies synthesizer falls back to wildcard after repeated errors."""
+    synthesizer = LLMSynthesizer(api_key="valid_key")
+    gap = Gap(missing_predicate={"has_key": True})
+
+    with (
+        patch(
+            "httpx.Client.post",
+            side_effect=httpx.HTTPError("connection failed"),
+        ),
+        patch("time.sleep"),
+    ):
+        action = synthesizer.synthesize_bridge_action(gap, available_actions=[])
+    assert "wildcard" in action.name
 
 
 def test_synthesizer_mock_openrouter_response() -> None:

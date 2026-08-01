@@ -1,6 +1,7 @@
 """Tests for JSON-file action storage persistence layer."""
 
 from typing import Any
+from unittest.mock import patch
 
 import pytest
 
@@ -76,3 +77,21 @@ def test_find_action_for_gap(temp_storage: ActionStorage) -> None:
 
     unmatched_gap = Gap(missing_predicate={"has_wand": True})
     assert temp_storage.find_action_for_gap(unmatched_gap) is None
+
+
+def test_storage_clear_handles_oserror(temp_storage: ActionStorage) -> None:
+    """Verifies clear() tolerates file removal OSError."""
+    temp_storage.save_action(
+        Action(
+            name="synth_test",
+            preconditions={},
+            effects={"cleared": True},
+            cost=10,
+        )
+    )
+    with patch(
+        "heal_my_goap.storage.os.remove",
+        side_effect=OSError("Permission denied"),
+    ):
+        temp_storage.clear()
+    assert temp_storage.load_actions()

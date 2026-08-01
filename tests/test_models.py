@@ -86,6 +86,13 @@ def test_execution_result_and_exceptions() -> None:
     )
     assert res.success is True
     assert res.error_message is None
+    assert res.is_successful() is True
+
+    res_fail = ExecutionResult(
+        success=False,
+        final_state=ws,
+    )
+    assert res_fail.is_successful() is False
 
     assert issubclass(NonIdempotentExecutionError, Exception)
     assert issubclass(SandboxTimeoutError, Exception)
