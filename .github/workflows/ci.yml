@@ -23,6 +23,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --dev
 
+      - name: Verify mypy installed
+        run: uv run python -c "import mypy; print(mypy.__version__)"
+
       - name: Run Ruff (lint & format)
         run: uvx ruff check . --fix && uvx ruff format . --check
 
