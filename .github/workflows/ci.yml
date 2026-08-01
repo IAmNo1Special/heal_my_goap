@@ -32,6 +32,9 @@ jobs:
       - name: Run Ruff (lint & format)
         run: uvx ruff check . --fix && uvx ruff format . --check
 
+      - name: Run mdformat (markdown lint)
+        run: uvx --with mdformat-front-matters mdformat --check README.md AGENTS.md
+
       - name: Run MyPy
         run: uv run python -m mypy src tests
 
