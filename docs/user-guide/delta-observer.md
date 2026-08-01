@@ -94,6 +94,7 @@ Supply a `state_refresh_callback` to `GoapEngine` so live state snapshots can be
 def get_live_state() -> dict[str, Any]:
     return system_sensors.read_state()
 
+
 engine = GoapEngine(
     observer=DeltaObserver(),
     state_refresh_callback=get_live_state,

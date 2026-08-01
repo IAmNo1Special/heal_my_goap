@@ -88,10 +88,12 @@ from heal_my_goap import (
     action_from_tool,
 )
 
+
 # 1. Define Python callable tools
 def clean_temp_files() -> None:
     """Deletes temporary files from disk."""
     print("🧹 Cleaning temporary files...")
+
 
 # Convert tool callable into a GOAP Action
 clean_action = action_from_tool(
@@ -138,9 +140,11 @@ ______________________________________________________________________
 ```python
 from heal_my_goap import action_from_tool, GoapEngine
 
+
 def run_type_checker_mypy(code_written: bool, types_installed: bool) -> None:
     """Run mypy type checker across source files."""
     pass
+
 
 # Auto-derives preconditions and effects from function annotations
 mypy_tool = action_from_tool(

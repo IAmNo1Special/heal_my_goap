@@ -93,10 +93,12 @@ from heal_my_goap import (
     action_from_tool,
 )
 
+
 # 1. Register a Python callable tool (1)!
 def clean_temp_files() -> None:
     """Deletes temporary files from disk."""
     print("🧹 Cleaning temporary files...")
+
 
 tool_action = action_from_tool(
     name="clean_temp_files",
@@ -123,7 +125,9 @@ engine = GoapEngine(
 )
 
 result = engine.run(
-    initial_state=WorldState(has_key=False, door_open=False, temp_files_count=10),
+    initial_state=WorldState(
+        has_key=False, door_open=False, temp_files_count=10
+    ),
     goal=Goal(target_state={"door_open": True}),
 )
 

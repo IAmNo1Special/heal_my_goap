@@ -172,8 +172,10 @@ Converts a tool callable or dictionary schema into a GOAP `Action`.
 ```python
 from heal_my_goap import action_from_tool
 
+
 def my_tool(param: str) -> None:
     pass
+
 
 action = action_from_tool(
     name="my_tool",

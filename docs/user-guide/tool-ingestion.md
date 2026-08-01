@@ -30,9 +30,11 @@ Passing a typed Python function automatically inspects parameter annotations to 
 ```python
 from heal_my_goap import action_from_tool
 
+
 def git_checkout_branch(branch_name: str) -> None:
     """Check out a new feature branch for development."""
     pass
+
 
 action = action_from_tool(
     name="git_checkout_branch",

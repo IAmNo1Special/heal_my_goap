@@ -49,7 +49,9 @@ engine = GoapEngine(
 
 # Patient needs medicine, but has_medicine=False
 result = engine.run(
-    initial_state=WorldState(location="lobby", has_medicine=False, patient_stabilized=False),
+    initial_state=WorldState(
+        location="lobby", has_medicine=False, patient_stabilized=False
+    ),
     goal=Goal(target_state={"patient_stabilized": True}),
 )
 

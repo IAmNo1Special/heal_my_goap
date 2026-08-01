@@ -32,44 +32,62 @@ from heal_my_goap import (
     goal,
 )
 
+
 # 1. Define typed callable tools
 def git_checkout_branch(branch_name: str) -> None:
     pass
 
+
 def search_codebase_symbols(query: str) -> list[str]:
     pass
+
 
 def apply_code_edits(files: list[str], changes: str) -> None:
     pass
 
+
 def run_linter_ruff() -> None:
     pass
+
 
 def run_type_checker_mypy() -> None:
     pass
 
+
 def run_pytest_suite() -> None:
     pass
+
 
 def git_commit_changes(message: str) -> None:
     pass
 
+
 def create_pull_request(title: str, body: str) -> None:
     pass
+
 
 def install_type_stubs(package: str) -> None:
     pass
 
+
 tools = [
-    action_from_tool("git_checkout_branch", "Branch checkout", git_checkout_branch),
-    action_from_tool("search_codebase_symbols", "Symbol search", search_codebase_symbols),
+    action_from_tool(
+        "git_checkout_branch", "Branch checkout", git_checkout_branch
+    ),
+    action_from_tool(
+        "search_codebase_symbols", "Symbol search", search_codebase_symbols
+    ),
     action_from_tool("apply_code_edits", "Apply edits", apply_code_edits),
     action_from_tool("run_linter_ruff", "Run ruff linter", run_linter_ruff),
-    action_from_tool("run_type_checker_mypy", "Run mypy type checker", run_type_checker_mypy),
+    action_from_tool(
+        "run_type_checker_mypy", "Run mypy type checker", run_type_checker_mypy
+    ),
     action_from_tool("run_pytest_suite", "Run pytest suite", run_pytest_suite),
     action_from_tool("git_commit_changes", "Git commit", git_commit_changes),
     action_from_tool("create_pull_request", "Create PR", create_pull_request),
-    action_from_tool("install_type_stubs", "Install type stubs", install_type_stubs),
+    action_from_tool(
+        "install_type_stubs", "Install type stubs", install_type_stubs
+    ),
 ]
 
 # 2. Initialize GoapEngine with DeltaObserver
