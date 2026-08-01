@@ -113,10 +113,10 @@ Before declaring work complete, agents MUST run and pass 100%:
 
 ## Dependency Notes
 
-- `goapauto==0.2.5` (pinned): The upstream planner library. On Windows it
-  reassigns `sys.stdout` at import, which breaks pytest capture; run tests
-  with `-s` / `-p no:capture` and read coverage via
-  `coverage report --show-missing`. See goapauto issue #43.
+- `goapauto==0.2.6` (pinned): The upstream planner library. Since v0.2.6 it
+  no longer rebinds `sys.stdout` at import, so pytest capture works without
+  `-s` / `-p no:capture`. If coverage appears empty, read it via
+  `coverage report --show-missing`.
 
 ## Git Workflow Rules
 
