@@ -10,7 +10,7 @@ kind: agents
 symbolic Goal-Oriented Action Planning (GOAP) with LLM-powered self-healing
 via OpenRouter.
 
-- **Zero-Token Runtime Planning**: Local A* search via `goapauto` pathfinding
+- **Zero-Token Runtime Planning**: Local A\* search via `goapauto` pathfinding
   based on deterministic state preconditions and effects.
 - **Diagnostic Gap Isolation**: Frontier node analysis and backward goal graph
   traversal to pinpoint exact missing state predicates (`Gap`).
@@ -33,7 +33,7 @@ via OpenRouter.
   SHA-256 canonical hash persistence (`ActionStorage`).
 - `src/heal_my_goap/sandbox.py`: Abstract interface (`BaseSandboxExecutor`) &
   `multiprocessing.Process` execution sandbox (`SandboxExecutor`).
-- `src/heal_my_goap/engine.py`: Orchestrator (`GoapEngine`) managing A*
+- `src/heal_my_goap/engine.py`: Orchestrator (`GoapEngine`) managing A\*
   planning, `WorldState` checkpointing, state rollback, and self-healing.
 - `src/heal_my_goap/__init__.py`: Package public API re-exports.
 
@@ -128,14 +128,14 @@ git commit -m "type(scope): descriptive message"
 
 1. **chore(root)**: Project config (`pyproject.toml`, `uv.lock`,
    `.gitignore`, `.python-version`, `.env.example`, `src/heal_my_goap/py.typed`)
-2. **docs(root)**: Documentation (`README.md`, `AGENTS.md`)
-3. **feat(models)**: Core domain models first (dependency foundation)
-4. **feat(<module>)**: Each module independently (`gap_analyzer`,
+1. **docs(root)**: Documentation (`README.md`, `AGENTS.md`)
+1. **feat(models)**: Core domain models first (dependency foundation)
+1. **feat(<module>)**: Each module independently (`gap_analyzer`,
    `synthesizer`, `storage`, `sandbox`, `engine`)
-5. **feat(agent)**: Package exports (`__init__.py`)
-6. **test**: Test suite (all test files together)
-7. **feat(examples)**: Example files
-8. **feat(data)**: Data files (`demo_actions.json`)
+1. **feat(agent)**: Package exports (`__init__.py`)
+1. **test**: Test suite (all test files together)
+1. **feat(examples)**: Example files
+1. **feat(data)**: Data files (`demo_actions.json`)
 
 ### Conventional Commit Format
 
