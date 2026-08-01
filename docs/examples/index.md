@@ -14,6 +14,7 @@ Complete, runnable examples showing `heal-my-goap` in action across different do
 | [OS System Monitor](system-monitor.md) | System health restoration via live OS metrics | Beginner | `SystemSensors`, `world_state_from_sensors`, `goal`, basic self-healing |
 | [Autonomous Coding Agent](coding-agent.md) | 9-tool AI software engineering pipeline | Advanced | `DeltaObserver`, `action_from_tool`, LLM synthesis, retry memory, git/PR automation |
 | [Hospital Medic Robot](hospital-emergency.md) | Robot medic with dynamic medicine shortage healing | Intermediate | Baseline actions, `GapAnalyzer`, `LLMSynthesizer`, `SandboxExecutor`, persistence |
+| [Google ADK Integration](google-adk-integration.md) | heal-my-goap as symbolic planner inside ADK agents | Intermediate | `GoapEngine` as ADK tool, `DeltaObserver`, `LLMSynthesizer`, streaming, workflows |
 
 <div class="grid cards">
   <div>
@@ -30,5 +31,10 @@ Complete, runnable examples showing `heal-my-goap` in action across different do
     <h3>🏥 Hospital Medic Robot</h3>
     <p>Autonomous robot medic navigating wards, treating patients, and self-healing when medicine is missing.</p>
     <p><a href="hospital-emergency/">Read more →</a></p>
+  </div>
+  <div>
+    <h3>🔗 Google ADK Integration</h3>
+    <p>Use heal-my-goap as a zero-token symbolic planner inside Google ADK agents with streaming and workflows.</p>
+    <p><a href="google-adk-integration/">Read more →</a></p>
   </div>
 </div>

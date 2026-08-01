@@ -98,6 +98,7 @@ nav:
       - OS System Monitor: examples/system-monitor.md
       - Autonomous Coding Agent: examples/coding-agent.md
       - Hospital Medic Robot: examples/hospital-emergency.md
+      - Google ADK Integration: examples/google-adk-integration.md
   - API Reference:
       - api-reference/index.md
       - GoapEngine: api-reference/engine.md
