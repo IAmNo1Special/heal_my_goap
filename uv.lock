@@ -92,14 +92,14 @@ wheels = [
 
 [[package]]
 name = "goapauto"
-version = "0.2.3"
+version = "0.2.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/da/45/298c90ac8af2c5a075775ec180706d1c9f04ba83f3a8273876e13c765ed3/goapauto-0.2.3.tar.gz", hash = "sha256:95a6f402aab05400f8dfb5160c53fb00d70ced20fef7bd2ff12ee31be649d27f", size = 19185, upload-time = "2026-08-01T11:16:14.756Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a2/d2/d84d342249c505811ccf4c37122c34af7e0bddf20106151ba84eb2214443/goapauto-0.2.4.tar.gz", hash = "sha256:9fc56d4682986f34fd272aef94e137c5126f8c6d36a8838ff3c3395886f16506", size = 19216, upload-time = "2026-08-01T11:51:18.12Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/84/fe/c1c45af15dc97ba7853c18e17770940e4584c3eeab4063dcec98303093d0/goapauto-0.2.3-py3-none-any.whl", hash = "sha256:41fe27508298d413731b1a89e26bc646a5e9f5ca028954817719294a3080a439", size = 24569, upload-time = "2026-08-01T11:16:13.603Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/47/a45f8f8b538cdb33dded2d9558a251386f366bb30c8fb781525c2d9a7b8a/goapauto-0.2.4-py3-none-any.whl", hash = "sha256:f8ad3b72ad7fb3b2fbe3ddf559c7d3757e36fd0419d7dc119575424c5275dd23", size = 24609, upload-time = "2026-08-01T11:51:17.04Z" },
 ]
 
 [[package]]
