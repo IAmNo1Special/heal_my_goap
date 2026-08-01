@@ -1,6 +1,12 @@
 # heal-my-goap 🩹🤖
 
+[![Documentation](https://img.shields.io/badge/docs-live-brightgreen)](https://IAmNo1Special.github.io/heal_my_goap/)
+[![PyPI](https://img.shields.io/pypi/v/heal-my-goap)](https://pypi.org/project/heal-my-goap/)
+[![Python](https://img.shields.io/pypi/pyversions/heal-my-goap)](https://pypi.org/project/heal-my-goap/)
+
 A production-ready Python library combining **zero-token symbolic Goal-Oriented Action Planning (GOAP)** via `goapauto` with **LLM-powered self-healing** via OpenRouter.
+
+**Documentation**: https://IAmNo1Special.github.io/heal_my_goap/
 
 `heal-my-goap` enables autonomous AI agents to plan and execute deterministic action sequences locally at zero API token cost. When unforeseen gaps or missing capabilities break an execution path, `heal-my-goap` isolates the unsatisfied state predicates, invokes an LLM to synthesize dynamic bridge actions, and persists learned actions locally for future zero-token reuse.
 
