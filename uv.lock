@@ -119,14 +119,14 @@ wheels = [
 
 [[package]]
 name = "goapauto"
-version = "0.2.5"
+version = "0.2.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/3c/04/3ed04b4fcba45fb10c55530abde493f6a5b362d1c275f0cb852e18440e21/goapauto-0.2.5.tar.gz", hash = "sha256:cd49b85525bfda008da726a52a9eb87d163baefdac0be79c0f86b67eeab277fa", size = 19287, upload-time = "2026-08-01T12:25:43.114Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ad/e4/ab95f5c89a2b4c76485510fc1cbf2598cda15b9ab08700e2e2251982b562/goapauto-0.2.6.tar.gz", hash = "sha256:3c9c546d333a06d2ef01780a809a8cbf1c3720fb515be4d891512d08341fc5fe", size = 19573, upload-time = "2026-08-01T12:56:25.021Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/98/68/7113c42603efe9b0826fd7d9baac45f990339395f73e24683393351cb5d4/goapauto-0.2.5-py3-none-any.whl", hash = "sha256:6a0d7aac944ea92c289943c24afad3a717e483bdbc1e7943b9b6fef314f2c75b", size = 24829, upload-time = "2026-08-01T12:25:41.945Z" },
+    { url = "https://files.pythonhosted.org/packages/cf/cf/9acc4014981260b2cfb868fea500122464093703b9afc846f7869de3f1ed/goapauto-0.2.6-py3-none-any.whl", hash = "sha256:f1c0b390e091427ed1fd2204e8229043c9cdaecf2d238c62ef50674117981d71", size = 24985, upload-time = "2026-08-01T12:56:23.735Z" },
 ]
 
 [[package]]
@@ -172,7 +172,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "goapauto", specifier = "==0.2.5" },
+    { name = "goapauto", specifier = "==0.2.6" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.15.0" },
     { name = "pydantic", specifier = ">=2.13.4" },
