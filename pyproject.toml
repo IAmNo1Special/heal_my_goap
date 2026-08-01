@@ -113,6 +113,8 @@ tag_pattern = "v[0-9].*"
 
 [dependency-groups]
 dev = [
+    "mdformat>=1.0.0",
+    "mdformat-frontmatter>=2.1.2",
     "mypy>=2.3.0",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
