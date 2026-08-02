@@ -6,10 +6,10 @@ description: Integrate heal-my-goap as the symbolic planner for your Google ADK 
 # Google ADK Integration
 
 !!! abstract "At a Glance"
-    **Scenario**: Use `heal-my-goap` as the zero-token symbolic planner inside a Google ADK agent, while ADK handles LLM reasoning, tool calling, and multi-agent orchestration.
-    **Key Features Used**: `GoapEngine` as planner, `DeltaObserver` for effect learning, `LLMSynthesizer` for self-healing, ADK `Agent` + `Runner` for LLM-driven execution.
+**Scenario**: Use `heal-my-goap` as the zero-token symbolic planner inside a Google ADK agent, while ADK handles LLM reasoning, tool calling, and multi-agent orchestration.
+**Key Features Used**: `GoapEngine` as planner, `DeltaObserver` for effect learning, `LLMSynthesizer` for self-healing, ADK `Agent` + `Runner` for LLM-driven execution.
 
----
+______________________________________________________________________
 
 ## Why Combine heal-my-goap with Google ADK?
 
@@ -25,7 +25,7 @@ description: Integrate heal-my-goap as the symbolic planner for your Google ADK 
 
 **heal-my-goap complements ADK** — it doesn't compete. Use ADK for LLM-driven agent orchestration, and plug in `GoapEngine` as the deterministic, zero-token planner for complex multi-step tasks that require guaranteed correctness and self-healing.
 
----
+______________________________________________________________________
 
 ## Architecture Overview
 
@@ -44,7 +44,7 @@ graph TD
     J --> B
 ```
 
----
+______________________________________________________________________
 
 ## Installation
 
@@ -58,7 +58,7 @@ pip install google-adk heal-my-goap
 
 Requires Python 3.10+ (ADK) and Python 3.13+ (heal-my-goap). Use Python 3.13 for full compatibility.
 
----
+______________________________________________________________________
 
 ## Quick Start: GoapEngine as an ADK Function Tool
 
@@ -203,7 +203,7 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
----
+______________________________________________________________________
 
 ## Advanced: GoapEngine as a Long-Running ADK Tool
 
@@ -277,7 +277,7 @@ root_agent = Agent(
 )
 ```
 
----
+______________________________________________________________________
 
 ## Integration Pattern: ADK 2.0 Graph Workflow + GoapEngine
 
@@ -428,7 +428,7 @@ root_agent = remediation_workflow
 
 The `Workflow` class is the **recommended** way to compose multi-agent processes in ADK 2.0+. It provides deterministic, debuggable execution graphs with full type-safe data flow between nodes.
 
----
+______________________________________________________________________
 
 ## Configuration: OpenRouter for LLMSynthesizer
 
@@ -450,7 +450,7 @@ synthesizer = LLMSynthesizer(
 )
 ```
 
----
+______________________________________________________________________
 
 ## Best Practices
 
@@ -463,7 +463,7 @@ synthesizer = LLMSynthesizer(
 | **Expose GOAP as a tool, not the agent** | ADK handles chat/handoffs; GOAP handles deterministic execution |
 | **Stream long plans** | Better UX; user sees progress, can interrupt if needed |
 
----
+______________________________________________________________________
 
 ## Complete Example Project Structure
 
@@ -483,7 +483,7 @@ my_adk_goap_agent/
     └── test_integration.py
 ```
 
----
+______________________________________________________________________
 
 ## Related Pages
 
