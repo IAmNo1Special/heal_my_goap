@@ -20,11 +20,8 @@ jobs:
       - name: Set up Python
         run: uv python install 3.13
 
-      - name: Create virtual environment
-        run: uv venv
-
       - name: Install dependencies
-        run: uv pip install -e ".[dev]"
+        run: uv sync
 
       - name: Verify mypy installed
         run: uv run python -c "import mypy; print('mypy ok')"

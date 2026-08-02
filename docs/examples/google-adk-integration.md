@@ -81,16 +81,20 @@ from heal_my_goap import (
     SandboxExecutor,
 )
 
+
 # 1. Define your domain tools (regular Python functions)
 def check_disk_space(path: str) -> dict:
     """Check available disk space in GB."""
     import shutil
+
     total, used, free = shutil.disk_usage(path)
     return {"free_gb": free // (1024**3)}
+
 
 def cleanup_temp_files() -> dict:
     """Remove temporary files to free disk space."""
     import tempfile, shutil
+
     temp_dir = tempfile.gettempdir()
     freed = 0
     for item in Path(temp_dir).glob("*"):
@@ -104,20 +108,25 @@ def cleanup_temp_files() -> dict:
             pass
     return {"freed_mb": freed // (1024**2)}
 
+
 def compress_logs() -> dict:
     """Compress old log files."""
     # Implementation omitted
     return {"compressed_mb": 150}
+
 
 def alert_oncall(message: str) -> dict:
     """Send alert to on-call engineer."""
     # Implementation omitted
     return {"sent": True}
 
+
 # 2. Convert tools to GOAP Actions with action_from_tool
 tools = [
     action_from_tool("check_disk_space", "Check disk space", check_disk_space),
-    action_from_tool("cleanup_temp_files", "Clean temp files", cleanup_temp_files),
+    action_from_tool(
+        "cleanup_temp_files", "Clean temp files", cleanup_temp_files
+    ),
     action_from_tool("compress_logs", "Compress logs", compress_logs),
     action_from_tool("alert_oncall", "Alert on-call", alert_oncall),
 ]
@@ -125,21 +134,22 @@ tools = [
 # 3. Initialize GoapEngine with self-healing
 engine = GoapEngine(
     tools=tools,
-    observer=DeltaObserver(),           # Learns action effects at runtime
-    synthesizer=LLMSynthesizer(),       # LLM generates bridge actions for gaps
-    executor=SandboxExecutor(),         # Safe subprocess execution
+    observer=DeltaObserver(),  # Learns action effects at runtime
+    synthesizer=LLMSynthesizer(),  # LLM generates bridge actions for gaps
+    executor=SandboxExecutor(),  # Safe subprocess execution
     storage_path=".goap_adk_actions.json",
 )
+
 
 # 4. Wrap engine.run() as an ADK FunctionTool
 def plan_and_execute_goal(goal_description: str, target_free_gb: int) -> dict:
     """
     Invoke the GOAP planner to achieve a system goal.
-    
+
     Args:
         goal_description: Human-readable goal (e.g., "free up disk space")
         target_free_gb: Target free space in GB
-        
+
     Returns:
         Dict with execution result and final state
     """
@@ -148,19 +158,22 @@ def plan_and_execute_goal(goal_description: str, target_free_gb: int) -> dict:
         target_free_gb=target_free_gb,
         alert_sent=False,
     )
-    
+
     result = engine.run(
         initial_state=initial_state,
         goal=goal(target_state={"disk_free_gb": target_free_gb}),
     )
-    
+
     return {
         "success": result.success,
         "final_free_gb": result.final_state.get("disk_free_gb"),
         "steps_executed": len(result.plan) if result.plan else 0,
         "self_healed": result.self_healed,
-        "synthesized_actions": [a.name for a in result.synthesized_actions] if result.synthesized_actions else [],
+        "synthesized_actions": [a.name for a in result.synthesized_actions]
+        if result.synthesized_actions
+        else [],
     }
+
 
 # 5. Create ADK Agent with the GOAP tool
 root_agent = Agent(
@@ -181,25 +194,30 @@ APP_NAME = "goap_adk_demo"
 USER_ID = "admin"
 SESSION_ID = "session_001"
 
+
 async def main():
     session_service = InMemorySessionService()
     session = await session_service.create_session(
         app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID
     )
-    runner = Runner(agent=root_agent, app_name=APP_NAME, session_service=session_service)
-    
+    runner = Runner(
+        agent=root_agent, app_name=APP_NAME, session_service=session_service
+    )
+
     # Example interaction
     user_query = "Free up at least 5GB of disk space on the root partition"
     content = types.Content(role="user", parts=[types.Part(text=user_query)])
-    
+
     async for event in runner.run_async(
         user_id=USER_ID, session_id=SESSION_ID, new_message=content
     ):
         if event.is_final_response():
             print("Agent:", event.content.parts[0].text)
 
+
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())
 ```
 
@@ -213,6 +231,7 @@ For long-running plans, use ADK's [long-running function tools](https://google.g
 from google.adk.tools import ToolContext
 from typing import AsyncGenerator
 
+
 async def plan_and_execute_goal_streaming(
     goal_description: str,
     target_free_gb: int,
@@ -220,7 +239,7 @@ async def plan_and_execute_goal_streaming(
 ) -> AsyncGenerator[dict, None]:
     """
     Streaming version that yields progress updates.
-    
+
     The ADK agent receives intermediate results and can respond to the user
     while the plan is still executing.
     """
@@ -229,16 +248,19 @@ async def plan_and_execute_goal_streaming(
         target_free_gb=target_free_gb,
         alert_sent=False,
     )
-    
+
     # Yield initial state
-    yield {"status": "planning", "message": f"Planning to free {target_free_gb}GB..."}
-    
+    yield {
+        "status": "planning",
+        "message": f"Planning to free {target_free_gb}GB...",
+    }
+
     # Run engine (this is synchronous; in production, run in executor)
     result = engine.run(
         initial_state=initial_state,
         goal=goal(target_state={"disk_free_gb": target_free_gb}),
     )
-    
+
     # Stream each step result
     if result.plan:
         for i, action in enumerate(result.plan):
@@ -248,14 +270,16 @@ async def plan_and_execute_goal_streaming(
                 "action": action.name,
                 "message": f"Executing {action.name}...",
             }
-    
+
     # Final result
     yield {
         "status": "completed" if result.success else "failed",
         "success": result.success,
         "final_free_gb": result.final_state.get("disk_free_gb"),
         "self_healed": result.self_healed,
-        "synthesized_actions": [a.name for a in result.synthesized_actions] if result.synthesized_actions else [],
+        "synthesized_actions": [a.name for a in result.synthesized_actions]
+        if result.synthesized_actions
+        else [],
     }
 ```
 
@@ -288,20 +312,24 @@ from google.adk import Agent, Workflow, Event
 from google.adk.agents.llm_agent import LlmAgent
 from pydantic import BaseModel
 
+
 # Define typed data passed between nodes
 class DiagnosisResult(BaseModel):
     root_cause: str
     severity: str  # "low" | "medium" | "high"
     affected_components: list[str]
 
+
 class PlanResult(BaseModel):
     plan_id: str
     steps: list[str]
     estimated_duration_min: int
 
+
 class VerificationResult(BaseModel):
     success: bool
     details: str
+
 
 # Sub-agent 1: Diagnosis (LLM-based) - using LlmAgent explicitly
 diagnosis_agent = LlmAgent(
@@ -312,6 +340,7 @@ diagnosis_agent = LlmAgent(
     tools=[get_system_metrics, analyze_logs],
 )
 
+
 # Sub-agent 2: Planning (GOAP-based) - wrapped as a function node
 def run_goap_planner(diagnosis: DiagnosisResult) -> PlanResult:
     """
@@ -319,9 +348,14 @@ def run_goap_planner(diagnosis: DiagnosisResult) -> PlanResult:
     This runs the GoapEngine and returns a structured plan.
     """
     # Map diagnosis to GOAP goal
-    goal_desc = f"Remediate {diagnosis.root_cause} ({diagnosis.severity} severity)"
-    target_state = {"system_healthy": True, "root_cause_resolved": diagnosis.root_cause}
-    
+    goal_desc = (
+        f"Remediate {diagnosis.root_cause} ({diagnosis.severity} severity)"
+    )
+    target_state = {
+        "system_healthy": True,
+        "root_cause_resolved": diagnosis.root_cause,
+    }
+
     initial_state = WorldState(
         disk_free_gb=check_disk_space("/")["free_gb"],
         target_free_gb=10,
@@ -329,17 +363,20 @@ def run_goap_planner(diagnosis: DiagnosisResult) -> PlanResult:
         root_cause=diagnosis.root_cause,
         severity=diagnosis.severity,
     )
-    
+
     result = engine.run(
         initial_state=initial_state,
         goal=goal(target_state=target_state),
     )
-    
+
     return PlanResult(
-        plan_id=f"plan_{result.plan_id}" if hasattr(result, 'plan_id') else "plan_001",
+        plan_id=f"plan_{result.plan_id}"
+        if hasattr(result, "plan_id")
+        else "plan_001",
         steps=[a.name for a in result.plan] if result.plan else [],
         estimated_duration_min=len(result.plan) * 2 if result.plan else 0,
     )
+
 
 # Sub-agent 3: Verification (LLM-based) - using LlmAgent explicitly
 verification_agent = LlmAgent(
@@ -350,6 +387,7 @@ verification_agent = LlmAgent(
     tools=[get_system_metrics, run_health_checks],
 )
 
+
 # Router function for conditional edges
 def route_by_severity(diagnosis: DiagnosisResult) -> Event:
     """Route to different handlers based on severity."""
@@ -359,26 +397,42 @@ def route_by_severity(diagnosis: DiagnosisResult) -> Event:
         return Event(route=["standard_path"])
     return Event(route=["monitor_path"])
 
+
 # Handler functions for different severity paths
 def critical_path_handler(_: Any) -> Event:
-    return Event(message="CRITICAL: Escalating to on-call immediately", route=["notify_oncall"])
+    return Event(
+        message="CRITICAL: Escalating to on-call immediately",
+        route=["notify_oncall"],
+    )
+
 
 def standard_path_handler(plan: PlanResult) -> Event:
-    return Event(message=f"Executing standard plan: {plan.plan_id}", route=["execute_plan"])
+    return Event(
+        message=f"Executing standard plan: {plan.plan_id}",
+        route=["execute_plan"],
+    )
+
 
 def monitor_path_handler(_: Any) -> Event:
-    return Event(message="Low severity: Adding to monitoring queue", route=["queue_for_later"])
+    return Event(
+        message="Low severity: Adding to monitoring queue",
+        route=["queue_for_later"],
+    )
+
 
 def notify_oncall(_: Any) -> Event:
     # Alert on-call engineer
     return Event(message="On-call notified", route=["execute_plan"])
 
+
 def execute_plan(plan: PlanResult) -> PlanResult:
     # The GOAP planner already executed; this confirms execution
     return plan
 
+
 def queue_for_later(_: Any) -> Event:
     return Event(message="Queued for maintenance window")
+
 
 # Build the Graph Workflow
 remediation_workflow = Workflow(
@@ -387,25 +441,23 @@ remediation_workflow = Workflow(
     edges=[
         # Sequential chain: START → diagnosis_agent → router
         ("START", diagnosis_agent, route_by_severity),
-        
         # Conditional routing based on severity
-        (route_by_severity, {
-            "critical_path": critical_path_handler,
-            "standard_path": standard_path_handler,
-            "monitor_path": monitor_path_handler,
-        }),
-        
+        (
+            route_by_severity,
+            {
+                "critical_path": critical_path_handler,
+                "standard_path": standard_path_handler,
+                "monitor_path": monitor_path_handler,
+            },
+        ),
         # Fan-in: all paths converge to execute_plan (except monitor)
         (critical_path_handler, notify_oncall),
         (notify_oncall, execute_plan),
         (standard_path_handler, execute_plan),
-        
         # Execute plan runs GOAP (already done in run_goap_planner, but can re-run)
         (execute_plan, run_goap_planner),
-        
         # Verification after execution
         (run_goap_planner, verification_agent),
-        
         # Queue path for low severity
         (monitor_path_handler, queue_for_later),
         (queue_for_later, "END"),

@@ -38,12 +38,19 @@ Changelog = "https://github.com/antigravity/heal-my-goap/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 dev = [
-    "mypy>=1.15.0",
+    "mdformat>=1.0.0",
+    "mdformat-front-matters>=2.0.0",
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.7",
+    "mypy>=2.3.0",
+    "pre-commit>=4.6.1",
+    "pymdown-extensions>=11.0.1",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
     "pytest-cov>=7.1.0",
-    "ruff>=0.9.0",
+    "ruff>=0.16.1",
 ]
+
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/heal_my_goap"]
